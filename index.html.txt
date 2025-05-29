@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StoryLink.ai - Personalized Story Generator</title>
+  <meta name="description" content="Create personalized storybooks for your child using StoryLink.ai. Enter your child's preferences and let AI generate magical tales just for them!"/>
+  <link rel="icon" href="favicon.ico" type="image/x-icon"/>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    h1, h2 {
+      color: #5a2ea0;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+    input, select, textarea, button {
+      padding: 10px;
+      width: 100%;
+      max-width: 500px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    select[multiple] {
+      height: 120px;
+    }
+    button {
+      background-color: #5a2ea0;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #4a2480;
+    }
+    #storySection {
+      margin-top: 40px;
+      display: none;
+    }
+    #storyOutput {
+      white-space: pre-wrap;
+      margin-top: 20px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    footer {
+      margin-top: 60px;
+      text-align: center;
+      font-size: 0.9em;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>StoryLink.ai</h1>
+  <p>Craft personalized storybooks for your child using AI magic!</p>
+
+  <div id="userForm">
+    <h2>Tell us about your child</h2>
+    <div class="form-group">
+      <label for="childName">Child's Name:</label>
+      <input type="text" id="childName" required />
+    </div>
+    <div class="form-group">
+      <label for="age">Child's Age:</label>
+      <input type="number" id="age" required />
+    </div>
+    <div class="form-group">
+      <label for="favorite">Favorite Animal or Toy:</label>
+      <input type="text" id="favorite" />
+    </div>
+    <div class="form-group">
+      <label for="family">Family Members Child Likes Most:</label>
+      <input type="text" id="family" placeholder="e.g., Mom, Dad, Grandpa" />
+    </div>
+    <div class="form-group">
+      <label for="storyType">Type of Stories (Choose multiple):</label>
+      <select id="storyType" multiple>
+        <option value="Fantasy">Fantasy</option>
+        <option value="Humor">Humor</option>
+        <option value="Adventure">Adventure</option>
+        <option value="Animal Tales">Animal Tales</option>
+        <option value="Bedtime">Bedtime</option>
+        <option value="Learning">Learning</option>
+      </select>
+    </div>
+    <button onclick="saveUserInfo()">Next</button>
+  </div>
+
+  <div id="storySection">
+    <h2>Write a prompt for your story</h2>
+    <div class="form-group">
+      <label for="prompt">Story Prompt:</label>
+      <textarea id="prompt" rows="4" placeholder="e.g., A magical forest with talking animals..."></textarea>
+    </div>
+    <button onclick="generateStory()">Generate Story</button>
+
+    <div id="storyOutput"></div>
+    <button onclick="narrateStory()">🎙️ Narrate Story</button>
+  </div>
+
+  <footer>
+    &copy; 2025 StoryLink.ai | Powered by GenAI
+  </footer>
+
+  <script>
+    let userInfo = {};
+
+    function saveUserInfo() {
+      userInfo.childName = document.getElementById('childName').value.trim();
+      userInfo.age = document.getElementById('age').value.trim();
+      userInfo.favorite = document.getElementById('favorite').value.trim();
+      userInfo.family = document.getElementById('family').value.trim();
+      const selectedOptions = Array.from(document.getElementById('storyType').selectedOptions);
+      userInfo.storyTypes = selectedOptions.map(opt => opt.value);
+
+      if (!userInfo.childName || !userInfo.age) {
+        alert("Please fill in required fields.");
+        return;
+      }
+
+      document.getElementById('userForm').style.display = 'none';
+      document.getElementById('storySection').style.display = 'block';
+    }
+
+    function generateStory() {
+      const prompt = document.getElementById('prompt').value.trim();
+      if (!prompt) {
+        alert("Please enter a prompt.");
+        return;
+      }
+
+      // Placeholder story generator (replace with real backend integration)
+      const story = `Once upon a time, there was a ${userInfo.favorite || "mysterious creature"} who lived in a land full of ${userInfo.storyTypes.join(", ")} adventures. One day, ${userInfo.childName}, a ${userInfo.age}-year-old child who loved ${userInfo.favorite}, went on a journey with ${userInfo.family}...\n\nPrompt: ${prompt}\n\nAnd so, the story began...`;
+
+      document.getElementById('storyOutput').textContent = story;
+    }
+
+    function narrateStory() {
+      const storyText = document.getElementById('storyOutput').textContent;
+      if (!storyText) {
+        alert("Please generate a story first.");
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance(storyText);
+      utterance.rate = 1;
+      speechSynthesis.speak(utterance);
+    }
+  </script>
+</body>
+</html>
